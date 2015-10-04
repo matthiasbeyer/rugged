@@ -490,6 +490,8 @@ void Init_rugged(void)
 	Init_rugged_odb();
 	Init_rugged_odb_backend();
 	Init_rugged_odb_backend_loose();
+	Init_rugged_odb_backend_one_pack();
+	Init_rugged_odb_backend_pack();
 
 	/*
 	 * Sort the repository contents in no particular ordering;

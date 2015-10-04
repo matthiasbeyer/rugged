@@ -84,6 +84,8 @@ void Init_rugged_refdb_backend_fs(void);
 void Init_rugged_odb(void);
 void Init_rugged_odb_backend(void);
 void Init_rugged_odb_backend_loose(void);
+void Init_rugged_odb_backend_one_pack(void);
+void Init_rugged_odb_backend_pack(void);
 
 VALUE rb_git_object_init(git_otype type, int argc, VALUE *argv, VALUE self);
 
