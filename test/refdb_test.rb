@@ -29,7 +29,7 @@ class RefdbTest < Rugged::TestCase
     refdb = Rugged::Refdb.new(@repo)
 
     compress_calls = 0
-    backend = TestBackend.new(@repo)
+    backend = Rugged::Refdb::Backend::Custom.new(@repo)
     backend.send(:define_singleton_method, :compress) do
       compress_calls += 1
     end
