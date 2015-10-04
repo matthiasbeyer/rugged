@@ -29,21 +29,21 @@ VALUE rb_cRuggedOdbBackendOnePack;
 
 static void rb_git_odb_backend__free(git_odb_backend *backend)
 {
-  if (backend) backend->free(backend);
+	if (backend) backend->free(backend);
 }
 
 static VALUE rb_git_odb_backend_one_pack_new(VALUE self, VALUE rb_path)
 {
-  git_odb_backend *backend;
+	git_odb_backend *backend;
 
-  rugged_exception_check(git_odb_backend_one_pack(&backend, StringValueCStr(rb_path)));
+	rugged_exception_check(git_odb_backend_one_pack(&backend, StringValueCStr(rb_path)));
 
-  return Data_Wrap_Struct(self, NULL, rb_git_odb_backend__free, backend);
+	return Data_Wrap_Struct(self, NULL, rb_git_odb_backend__free, backend);
 }
 
 void Init_rugged_odb_backend_one_pack(void)
 {
 	rb_cRuggedOdbBackendOnePack = rb_define_class_under(rb_cRuggedOdbBackend, "OnePack", rb_cRuggedOdbBackend);
 
-  rb_define_singleton_method(rb_cRuggedOdbBackendOnePack, "new", rb_git_odb_backend_one_pack_new, 1);
+	rb_define_singleton_method(rb_cRuggedOdbBackendOnePack, "new", rb_git_odb_backend_one_pack_new, 1);
 }

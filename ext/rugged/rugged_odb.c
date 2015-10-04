@@ -37,9 +37,9 @@ VALUE rb_cRuggedOdb;
  *  needs to be assigned using `Odb#add_backend`.
  */
 static VALUE rb_git_odb_new(VALUE klass) {
-  git_odb *odb;
-  rugged_exception_check(git_odb_new(&odb));
-  return Data_Wrap_Struct(klass, NULL, git_odb_free, odb);
+	git_odb *odb;
+	rugged_exception_check(git_odb_new(&odb));
+	return Data_Wrap_Struct(klass, NULL, git_odb_free, odb);
 }
 
 /*
@@ -52,13 +52,13 @@ static VALUE rb_git_odb_new(VALUE klass) {
  *  `dir` needs to boint to the objects folder to be used
  *  by the filesystem backends.
  */
- static VALUE rb_git_odb_open(VALUE klass, VALUE rb_path) {
-   git_odb *odb;
+static VALUE rb_git_odb_open(VALUE klass, VALUE rb_path) {
+	git_odb *odb;
 
-   rugged_exception_check(git_odb_open(&odb, StringValueCStr(rb_path)));
+	rugged_exception_check(git_odb_open(&odb, StringValueCStr(rb_path)));
 
-   return Data_Wrap_Struct(klass, NULL, git_odb_free, odb);
- }
+	return Data_Wrap_Struct(klass, NULL, git_odb_free, odb);
+}
 
 /*
  *  call-seq:
@@ -72,59 +72,59 @@ static VALUE rb_git_odb_new(VALUE klass) {
  */
 static VALUE rb_git_odb_add_backend(VALUE self, VALUE rb_backend, VALUE rb_priority)
 {
-  git_odb *odb;
-  git_odb_backend *backend;
+	git_odb *odb;
+	git_odb_backend *backend;
 
-  Data_Get_Struct(self, git_odb, odb);
-  Data_Get_Struct(rb_backend, git_odb_backend, backend);
+	Data_Get_Struct(self, git_odb, odb);
+	Data_Get_Struct(rb_backend, git_odb_backend, backend);
 
-  if (!backend)
-    rb_exc_raise(rb_exc_new2(rb_eRuntimeError, "Can not reuse odb backend instances"));
+	if (!backend)
+		rb_exc_raise(rb_exc_new2(rb_eRuntimeError, "Can not reuse odb backend instances"));
 
-  rugged_exception_check(git_odb_add_backend(odb, backend, NUM2INT(rb_priority)));
+	rugged_exception_check(git_odb_add_backend(odb, backend, NUM2INT(rb_priority)));
 
-  // libgit2 has taken ownership of the backend, so we should make sure
-  // we don't try to free it.
-  ((struct RData *)rb_backend)->data = NULL;
+	// libgit2 has taken ownership of the backend, so we should make sure
+	// we don't try to free it.
+	((struct RData *)rb_backend)->data = NULL;
 
-  return self;
+	return self;
 }
 
 static int cb_odb__each(const git_oid *id, void *data)
 {
-  char out[40];
+	char out[40];
 	struct rugged_cb_payload *payload = data;
 
-  git_oid_fmt(out, id);
-  rb_protect(rb_yield, rb_str_new(out, 40), &payload->exception);
+	git_oid_fmt(out, id);
+	rb_protect(rb_yield, rb_str_new(out, 40), &payload->exception);
 
-  return payload->exception ? GIT_ERROR : GIT_OK;
+	return payload->exception ? GIT_ERROR : GIT_OK;
 }
 
 static VALUE rb_git_odb_each(VALUE self)
 {
-  git_odb *odb;
-  int error;
-  struct rugged_cb_payload payload = { self, 0 };
+	git_odb *odb;
+	int error;
+	struct rugged_cb_payload payload = { self, 0 };
 
-  Data_Get_Struct(self, git_odb, odb);
+	Data_Get_Struct(self, git_odb, odb);
 
-  error = git_odb_foreach(odb, &cb_odb__each, &payload);
+	error = git_odb_foreach(odb, &cb_odb__each, &payload);
 
 	if (payload.exception)
 		rb_jump_tag(payload.exception);
 	rugged_exception_check(error);
 
-  return Qnil;
+	return Qnil;
 }
 
 void Init_rugged_odb(void)
 {
 	rb_cRuggedOdb = rb_define_class_under(rb_mRugged, "Odb", rb_cObject);
 
-  rb_define_singleton_method(rb_cRuggedOdb, "new", rb_git_odb_new, 0);
+	rb_define_singleton_method(rb_cRuggedOdb, "new", rb_git_odb_new, 0);
 	rb_define_singleton_method(rb_cRuggedOdb, "open", rb_git_odb_open, 1);
 
 	rb_define_method(rb_cRuggedOdb, "add_backend", rb_git_odb_add_backend, 2);
-  rb_define_method(rb_cRuggedOdb, "each", rb_git_odb_each, 0);
+	rb_define_method(rb_cRuggedOdb, "each", rb_git_odb_each, 0);
 }

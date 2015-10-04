@@ -29,21 +29,21 @@ VALUE rb_cRuggedOdbBackendLoose;
 
 void rb_git_odb_backend__free(git_odb_backend *backend)
 {
-  if (backend) backend->free(backend);
+	if (backend) backend->free(backend);
 }
 
 static VALUE rb_git_odb_backend_loose_new(VALUE self, VALUE rb_path, VALUE rb_compression_level, VALUE rb_do_fsync, VALUE rb_dir_mode, VALUE rb_file_mode)
 {
-  git_odb_backend *backend;
+	git_odb_backend *backend;
 
-  rugged_exception_check(git_odb_backend_loose(&backend, StringValueCStr(rb_path), NUM2INT(rb_compression_level), NUM2INT(rb_do_fsync), NUM2INT(rb_dir_mode), NUM2INT(rb_file_mode)));
+	rugged_exception_check(git_odb_backend_loose(&backend, StringValueCStr(rb_path), NUM2INT(rb_compression_level), NUM2INT(rb_do_fsync), NUM2INT(rb_dir_mode), NUM2INT(rb_file_mode)));
 
-  return Data_Wrap_Struct(self, NULL, rb_git_odb_backend__free, backend);
+	return Data_Wrap_Struct(self, NULL, rb_git_odb_backend__free, backend);
 }
 
 void Init_rugged_odb_backend_loose(void)
 {
 	rb_cRuggedOdbBackendLoose = rb_define_class_under(rb_cRuggedOdbBackend, "Loose", rb_cRuggedOdbBackend);
 
-  rb_define_singleton_method(rb_cRuggedOdbBackendLoose, "new", rb_git_odb_backend_loose_new, 5);
+	rb_define_singleton_method(rb_cRuggedOdbBackendLoose, "new", rb_git_odb_backend_loose_new, 5);
 }
