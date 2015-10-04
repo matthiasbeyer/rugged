@@ -1,11 +1,5 @@
 require "test_helper"
 
-class TestBackend < Rugged::Refdb::Backend::Custom
-  def compress
-    puts "compress!"
-  end
-end
-
 class RefdbTest < Rugged::TestCase
   def setup
     @repo = FixtureRepo.from_rugged("testrepo.git")
@@ -33,9 +27,16 @@ class RefdbTest < Rugged::TestCase
 
   def test_custom_backend
     refdb = Rugged::Refdb.new(@repo)
+
+    compress_calls = 0
     backend = TestBackend.new(@repo)
+    backend.send(:define_singleton_method, :compress) do
+      compress_calls += 1
+    end
 
     refdb.backend = backend
     refdb.compress
+
+    assert_equal 1, compress_calls
   end
 end
