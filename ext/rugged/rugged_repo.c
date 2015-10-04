@@ -2464,6 +2464,19 @@ static VALUE rb_git_repo_cherrypick(int argc, VALUE *argv, VALUE self)
 	return Qnil;
 }
 
+static VALUE rb_git_repository_set_refdb(VALUE self, VALUE rb_refdb)
+{
+	git_repository *repo;
+	git_refdb *refdb;
+
+	Data_Get_Struct(self, git_repository, repo);
+	Data_Get_Struct(rb_refdb, git_refdb, refdb);
+
+	git_repository_set_refdb(repo, refdb);
+
+	return rb_refdb;
+}
+
 void Init_rugged_repo(void)
 {
 	id_call = rb_intern("call");
@@ -2499,6 +2512,7 @@ void Init_rugged_repo(void)
 	rb_define_method(rb_cRuggedRepo, "index=",  rb_git_repo_set_index,  1);
 	rb_define_method(rb_cRuggedRepo, "config",  rb_git_repo_get_config,  0);
 	rb_define_method(rb_cRuggedRepo, "config=",  rb_git_repo_set_config,  1);
+	rb_define_method(rb_cRuggedRepo, "refdb=", rb_git_repository_set_refdb, 1);
 
 	rb_define_method(rb_cRuggedRepo, "ident", rb_git_repo_get_ident, 0);
 	rb_define_method(rb_cRuggedRepo, "ident=", rb_git_repo_set_ident, 1);

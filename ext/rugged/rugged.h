@@ -41,6 +41,8 @@
 #include <git2.h>
 #include <git2/odb_backend.h>
 #include <git2/sys/refdb_backend.h>
+#include <git2/sys/refs.h>
+#include <git2/sys/repository.h>
 #include <git2/sys/odb_backend.h>
 
 #define rb_str_new_utf8(str) rb_enc_str_new(str, strlen(str), rb_utf8_encoding())
