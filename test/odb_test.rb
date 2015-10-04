@@ -21,6 +21,6 @@ class OdbTest < Rugged::TestCase
 
     ids = []
     refdb.each { |id| ids << id }
-    assert_equal 90, ids.length
+    assert_equal 31, ids.length
   end
 end
