@@ -482,6 +482,14 @@ void Init_rugged(void)
 	Init_rugged_cred();
 	Init_rugged_backend();
 
+	Init_rugged_refdb();
+	Init_rugged_refdb_backend();
+	Init_rugged_refdb_backend_fs();
+
+	Init_rugged_odb();
+	Init_rugged_odb_backend();
+	Init_rugged_odb_backend_loose();
+
 	/*
 	 * Sort the repository contents in no particular ordering;
 	 * this sorting is arbitrary, implementation-specific

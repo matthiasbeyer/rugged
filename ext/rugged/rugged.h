@@ -40,6 +40,8 @@
 #include <assert.h>
 #include <git2.h>
 #include <git2/odb_backend.h>
+#include <git2/sys/refdb_backend.h>
+#include <git2/sys/odb_backend.h>
 
 #define rb_str_new_utf8(str) rb_enc_str_new(str, strlen(str), rb_utf8_encoding())
 #define CSTR2SYM(s) (ID2SYM(rb_intern((s))))
@@ -75,6 +77,12 @@ void Init_rugged_diff_line(void);
 void Init_rugged_blame(void);
 void Init_rugged_cred(void);
 void Init_rugged_backend(void);
+void Init_rugged_refdb(void);
+void Init_rugged_refdb_backend(void);
+void Init_rugged_refdb_backend_fs(void);
+void Init_rugged_odb(void);
+void Init_rugged_odb_backend(void);
+void Init_rugged_odb_backend_loose(void);
 
 VALUE rb_git_object_init(git_otype type, int argc, VALUE *argv, VALUE self);
 
