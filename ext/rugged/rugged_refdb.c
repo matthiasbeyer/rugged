@@ -84,7 +84,7 @@ static VALUE rb_git_refdb_set_backend(VALUE self, VALUE rb_backend)
 	Data_Get_Struct(rb_backend, git_refdb_backend, backend);
 
 	if (!backend)
-		rb_exc_raise(rb_exc_new_cstr(rb_eRuntimeError, "Can not reuse refdb backend instances"));
+		rb_exc_raise(rb_exc_new2(rb_eRuntimeError, "Can not reuse refdb backend instances"));
 
 	rugged_exception_check(git_refdb_set_backend(refdb, backend));
 

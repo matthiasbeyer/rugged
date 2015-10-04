@@ -79,7 +79,7 @@ static VALUE rb_git_odb_add_backend(VALUE self, VALUE rb_backend, VALUE rb_prior
   Data_Get_Struct(rb_backend, git_odb_backend, backend);
 
   if (!backend)
-    rb_exc_raise(rb_exc_new_cstr(rb_eRuntimeError, "Can not reuse odb backend instances"));
+    rb_exc_raise(rb_exc_new2(rb_eRuntimeError, "Can not reuse odb backend instances"));
 
   rugged_exception_check(git_odb_add_backend(odb, backend, NUM2INT(rb_priority)));
 
