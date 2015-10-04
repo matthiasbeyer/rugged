@@ -40,3 +40,26 @@ class RefdbTest < Rugged::TestCase
     assert_equal 1, compress_calls
   end
 end
+
+class RefdbBackendCustomTest < Rugged::TestCase
+  def setup
+    @repo = FixtureRepo.from_rugged("testrepo.git")
+    @refdb = Rugged::Refdb.new(@repo)
+    @backend = Rugged::Refdb::Backend::Custom.new(@repo)
+    @refdb.backend = @backend
+    @repo.refdb = @refdb
+  end
+
+  def test_lookup
+    @backend.send(:define_singleton_method, :lookup) do |ref_name|
+      "1385f264afb75a56a5bec74243be9b367ba4ca08" if ref_name == "refs/heads/master"
+    end
+
+    ref = @repo.references["refs/heads/master"]
+    assert ref
+    assert_equal "refs/heads/master", ref.name
+    assert_equal "1385f264afb75a56a5bec74243be9b367ba4ca08", ref.target_id
+
+    assert_nil @repo.references["refs/heads/development"]
+  end
+end

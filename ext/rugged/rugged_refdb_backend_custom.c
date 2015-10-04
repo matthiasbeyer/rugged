@@ -45,6 +45,30 @@ static int rugged_refdb_backend_custom__exists(
 	return GIT_OK;
 }
 
+static int rugged_refdb_backend_custom__lookup(
+	git_reference **out,
+	git_refdb_backend *_backend,
+	const char *ref_name)
+{
+	rugged_refdb_backend_custom *backend = (rugged_refdb_backend_custom *)_backend;
+	git_oid oid;
+	VALUE rb_result;
+
+	// TODO: Proper exception handling
+	rb_result = rb_funcall(backend->self, rb_intern("lookup"), 1, rb_str_new2(ref_name));
+	if (TYPE(rb_result) == T_STRING) {
+		// TODO: Handle symbolic refs as well
+		// TODO: Proper exception handling
+		rugged_exception_check(git_oid_fromstr(&oid, StringValueCStr(rb_result)));
+		*out = git_reference__alloc(ref_name, &oid, NULL);
+		return GIT_OK;
+	} else {
+		// TODO: Better error handling
+		*out = NULL;
+		return GIT_ENOTFOUND;
+	}
+}
+
 static int rugged_refdb_backend_custom__compress(git_refdb_backend *_backend)
 {
 	rugged_refdb_backend_custom *backend = (rugged_refdb_backend_custom *)_backend;
@@ -68,6 +92,7 @@ static VALUE rb_git_refdb_backend_custom_new(VALUE self, VALUE rb_repo)
 
 	backend->parent.exists = &rugged_refdb_backend_custom__exists;
 	backend->parent.compress = &rugged_refdb_backend_custom__compress;
+	backend->parent.lookup = &rugged_refdb_backend_custom__lookup;
 	backend->parent.free = xfree;
 
 	backend->self = Data_Wrap_Struct(self, NULL, rb_git_refdb_backend__free, backend);
