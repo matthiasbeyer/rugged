@@ -79,6 +79,7 @@ void Init_rugged_cred(void);
 void Init_rugged_backend(void);
 void Init_rugged_refdb(void);
 void Init_rugged_refdb_backend(void);
+void Init_rugged_refdb_backend_custom(void);
 void Init_rugged_refdb_backend_fs(void);
 void Init_rugged_odb(void);
 void Init_rugged_odb_backend(void);

@@ -484,6 +484,7 @@ void Init_rugged(void)
 
 	Init_rugged_refdb();
 	Init_rugged_refdb_backend();
+	Init_rugged_refdb_backend_custom();
 	Init_rugged_refdb_backend_fs();
 
 	Init_rugged_odb();

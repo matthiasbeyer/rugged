@@ -1,5 +1,11 @@
 require "test_helper"
 
+class TestBackend < Rugged::Refdb::Backend::Custom
+  def compress
+    puts "compress!"
+  end
+end
+
 class RefdbTest < Rugged::TestCase
   def setup
     @repo = FixtureRepo.from_rugged("testrepo.git")
@@ -23,5 +29,13 @@ class RefdbTest < Rugged::TestCase
     assert_raises RuntimeError do
       refdb.backend = backend
     end
+  end
+
+  def test_custom_backend
+    refdb = Rugged::Refdb.new(@repo)
+    backend = TestBackend.new(@repo)
+
+    refdb.backend = backend
+    refdb.compress
   end
 end

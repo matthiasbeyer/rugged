@@ -37,14 +37,14 @@ VALUE rb_cRuggedRefdb;
  *  needs to be assigned using `Refdb#backend=`.
  */
 static VALUE rb_git_refdb_new(VALUE klass, VALUE rb_repo) {
-  git_refdb *refdb;
-  git_repository *repo;
+	git_refdb *refdb;
+	git_repository *repo;
 
-  Data_Get_Struct(rb_repo, git_repository, repo);
+	Data_Get_Struct(rb_repo, git_repository, repo);
 
-  rugged_exception_check(git_refdb_new(&refdb, repo));
+	rugged_exception_check(git_refdb_new(&refdb, repo));
 
-  return Data_Wrap_Struct(klass, NULL, git_refdb_free, refdb);
+	return Data_Wrap_Struct(klass, NULL, git_refdb_free, refdb);
 }
 
 /*
@@ -55,14 +55,14 @@ static VALUE rb_git_refdb_new(VALUE klass, VALUE rb_repo) {
  *  backend.
  */
  static VALUE rb_git_refdb_open(VALUE klass, VALUE rb_repo) {
-   git_refdb *refdb;
-   git_repository *repo;
+	 git_refdb *refdb;
+	 git_repository *repo;
 
-   Data_Get_Struct(rb_repo, git_repository, repo);
+	 Data_Get_Struct(rb_repo, git_repository, repo);
 
-   rugged_exception_check(git_refdb_open(&refdb, repo));
+	 rugged_exception_check(git_refdb_open(&refdb, repo));
 
-   return Data_Wrap_Struct(klass, NULL, git_refdb_free, refdb);
+	 return Data_Wrap_Struct(klass, NULL, git_refdb_free, refdb);
  }
 
 /*
@@ -77,30 +77,46 @@ static VALUE rb_git_refdb_new(VALUE klass, VALUE rb_repo) {
  */
 static VALUE rb_git_refdb_set_backend(VALUE self, VALUE rb_backend)
 {
-  git_refdb *refdb;
-  git_refdb_backend *backend;
+	git_refdb *refdb;
+	git_refdb_backend *backend;
 
-  Data_Get_Struct(self, git_refdb, refdb);
-  Data_Get_Struct(rb_backend, git_refdb_backend, backend);
+	Data_Get_Struct(self, git_refdb, refdb);
+	Data_Get_Struct(rb_backend, git_refdb_backend, backend);
 
-  if (!backend)
-    rb_exc_raise(rb_exc_new_cstr(rb_eRuntimeError, "Can not reuse refdb backend instances"));
+	if (!backend)
+		rb_exc_raise(rb_exc_new_cstr(rb_eRuntimeError, "Can not reuse refdb backend instances"));
 
-  rugged_exception_check(git_refdb_set_backend(refdb, backend));
+	rugged_exception_check(git_refdb_set_backend(refdb, backend));
 
-  // libgit2 has taken ownership of the backend, so we should make sure
-  // we don't try to free it.
-  ((struct RData *)rb_backend)->data = NULL;
+	// libgit2 has taken ownership of the backend, so we should make sure
+	// we don't try to free it.
+	((struct RData *)rb_backend)->data = NULL;
 
-  return Qnil;
+	return Qnil;
+}
+
+/*
+ *  call-seq:
+ *    refdb.compress -> nil
+ */
+static VALUE rb_git_refdb_compress(VALUE self)
+{
+	git_refdb *refdb;
+
+	Data_Get_Struct(self, git_refdb, refdb);
+
+	rugged_exception_check(git_refdb_compress(refdb));
+
+	return Qnil;
 }
 
 void Init_rugged_refdb(void)
 {
 	rb_cRuggedRefdb = rb_define_class_under(rb_mRugged, "Refdb", rb_cObject);
 
-  rb_define_singleton_method(rb_cRuggedRefdb, "new", rb_git_refdb_new, 1);
+	rb_define_singleton_method(rb_cRuggedRefdb, "new", rb_git_refdb_new, 1);
 	rb_define_singleton_method(rb_cRuggedRefdb, "open", rb_git_refdb_open, 1);
 
 	rb_define_method(rb_cRuggedRefdb, "backend=", rb_git_refdb_set_backend, 1);
+	rb_define_method(rb_cRuggedRefdb, "compress", rb_git_refdb_compress, 0);
 }

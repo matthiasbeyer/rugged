@@ -29,24 +29,24 @@ VALUE rb_cRuggedRefdbBackendFileSystem;
 
 void rb_git_refdb_backend__free(git_refdb_backend *backend)
 {
-  if (backend) backend->free(backend);
+	if (backend) backend->free(backend);
 }
 
 static VALUE rb_git_refdb_backend_fs_new(VALUE self, VALUE rb_repo)
 {
-  git_repository *repo;
-  git_refdb_backend *backend;
+	git_repository *repo;
+	git_refdb_backend *backend;
 
-  Data_Get_Struct(rb_repo, git_repository, repo);
+	Data_Get_Struct(rb_repo, git_repository, repo);
 
-  rugged_exception_check(git_refdb_backend_fs(&backend, repo));
+	rugged_exception_check(git_refdb_backend_fs(&backend, repo));
 
-  return Data_Wrap_Struct(self, NULL, rb_git_refdb_backend__free, backend);
+	return Data_Wrap_Struct(self, NULL, rb_git_refdb_backend__free, backend);
 }
 
 void Init_rugged_refdb_backend_fs(void)
 {
 	rb_cRuggedRefdbBackendFileSystem = rb_define_class_under(rb_cRuggedRefdbBackend, "FileSystem", rb_cRuggedRefdbBackend);
 
-  rb_define_singleton_method(rb_cRuggedRefdbBackendFileSystem, "new", rb_git_refdb_backend_fs_new, 1);
+	rb_define_singleton_method(rb_cRuggedRefdbBackendFileSystem, "new", rb_git_refdb_backend_fs_new, 1);
 }
