@@ -49,7 +49,7 @@ static VALUE rb_git_odb_new(VALUE klass) {
  *  Create a new object database with the default filesystem
  *  backends.
  *
- *  `dir` needs to boint to the objects folder to be used
+ *  `dir` needs to point to the objects folder to be used
  *  by the filesystem backends.
  */
 static VALUE rb_git_odb_open(VALUE klass, VALUE rb_path) {
@@ -62,9 +62,9 @@ static VALUE rb_git_odb_open(VALUE klass, VALUE rb_path) {
 
 /*
  *  call-seq:
- *    odb.add_backend(backend) -> odb
+ *    odb.add_backend(backend, priority) -> odb
  *
- *  Set the backend to be used by the reference db.
+ *  Add a backend to be used by the object db.
  *
  *  A backend can only be assigned once, and becomes unusable from that
  *  point on. Trying to assign a backend a second time will raise an
